@@ -15,6 +15,15 @@ define Device/friendlyarm_nanopi-r2s
 endef
 TARGET_DEVICES += friendlyarm_nanopi-r2s
 
+define Device/librecomputer_renegade
+  DEVICE_VENDOR := Libre Computer
+  DEVICE_MODEL := Renegade
+  SOC := rk3328
+  UBOOT_DEVICE_NAME := roc-cc-rk3328
+  IMAGE/sysupgrade.img.gz := boot-common | boot-script | pine64-img | gzip | append-metadata
+endef
+TARGET_DEVICES += librecomputer_renegade
+
 define Device/pine64_rockpro64
   DEVICE_VENDOR := Pine64
   DEVICE_MODEL := RockPro64
