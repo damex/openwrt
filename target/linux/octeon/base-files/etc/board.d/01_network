@@ -7,13 +7,15 @@
 
 board_config_update
 
-case "$(board_name)" in
-itus,shield-router)
-	ucidef_set_interfaces_lan_wan "eth1 eth2" "eth0"
-	;;
-*)
-	ucidef_set_interfaces_lan_wan "eth0" "eth1"
-	;;
+board="$(board_name)"
+
+case "${board}" in
+	itus,shield-router)
+		ucidef_set_interfaces_lan_wan "eth1 eth2" "eth0"
+		;;
+	*)
+		ucidef_set_interfaces_lan_wan "eth0" "eth1"
+		;;
 esac
 
 board_config_flush
