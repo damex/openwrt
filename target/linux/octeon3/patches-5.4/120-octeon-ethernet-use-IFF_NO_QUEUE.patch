@@ -1,0 +1,24 @@
+--- a/drivers/staging/octeon/ethernet-tx.c
++++ b/drivers/staging/octeon/ethernet-tx.c
+@@ -411,17 +411,12 @@
+ 	/* Drop this packet if we have too many already queued to the HW */
+ 	if (unlikely(skb_queue_len(&priv->tx_free_list[qos]) >=
+ 		     MAX_OUT_QUEUE_DEPTH)) {
+-		if (dev->tx_queue_len != 0) {
+-			/* Drop the lock when notifying the core.  */
+-			spin_unlock_irqrestore(&priv->tx_free_list[qos].lock,
+-					       flags);
+-			netif_stop_queue(dev);
+-			spin_lock_irqsave(&priv->tx_free_list[qos].lock,
+-					  flags);
+-		} else {
+-			/* If not using normal queueing.  */
++		if (dev->priv_flags & IFF_NO_QUEUE) {
++			/* not using normal queueing.  */
+ 			queue_type = QUEUE_DROP;
+ 			goto skip_xmit;
++		} else {
++			netif_stop_queue(dev);
+ 		}
+ 	}
+ 

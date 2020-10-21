@@ -1,0 +1,23 @@
+#!/bin/sh
+
+move_config() {
+	. /lib/functions.sh
+	local board="$(board_name)"
+	local type="vfat"
+	local device
+	case "${board}" in
+		ubnt,edgerouter-4 |\
+		ubnt,edgerouter-12)
+			device="/dev/mmcblk0p1"
+			;;
+	esac
+
+	if [ ! -z "${device}" ] ; then
+		. /lib/upgrade/common.sh
+		mount -t "${type}" "${device}" /mnt
+		[ -f "/mnt/${BACKUP_FILE}" ] && mv -f "/mnt/${BACKUP_FILE}" /
+		umount /mnt
+	fi
+}
+
+boot_hook_add preinit_mount_root move_config

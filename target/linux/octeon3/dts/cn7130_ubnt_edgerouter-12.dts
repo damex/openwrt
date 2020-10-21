@@ -1,0 +1,259 @@
+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+
+#include "cn7130.dtsi"
+
+/ {
+	compatible = "ubnt,edgerouter-12", "cavium,cn7130";
+	model = "Ubiquiti EdgeRouter 12";
+
+	memory@0 {
+		device_type = "memory";
+		reg = <0x00 0x00000000>,
+		      <0x00 0x10000000>,
+		      <0x00 0x20000000>,
+		      <0x00 0x30000000>;
+	};
+};
+
+&uart0 {
+	status = "okay";
+};
+
+&usb0 {
+	status = "okay";
+};
+
+&twsi0 {
+	status = "okay";
+
+	sfp_eeprom@50 {
+		compatible = "at,24c04";
+		reg = <0x50>;
+	};
+	sfp_eeprom@51 {
+		reg = <0x51>;
+		compatible = "at,24c04";
+	};
+};
+
+&twsi1 {
+	status = "okay";
+
+	sensor1@2e {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		compatible = "adt7475,adt7475";
+		reg = <0x2e>;
+	};
+	sensor2@4c {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		compatible = "tmp421,tmp421";
+		reg = <0x4c>;
+	};
+	psu@40 {
+		/* No Driver */
+		compatible = "isl28022,isl28022";
+		reg = <0x40>;
+	};
+};
+
+&spi {
+	status = "okay";
+
+	flash@0 {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		address-width = <24>;
+		mode = <0x00>;
+		spi-max-frequency = <25000000>;
+		compatible = "Macronix,mx25l6405d", "spi-flash";
+		size = <0x200000>;
+		pagesize = <0x10000>;
+		reg = <0x00>;
+
+		boot0: partition@0 {
+			label = "boot0";
+			read-only;
+			reg = <0x0 0x200000>;
+		};
+
+		boot1: partition@200000 {
+			label = "boot1";
+			read-only;
+			reg = <0x200000 0x200000>;
+		};
+
+		eeprom: partition@400000 {
+			label = "eeprom";
+			read-only;
+			reg = <0x400000 0x10000>;
+		};
+	};
+};
+
+&emmc {
+	status = "okay";
+
+	mmc-slot@0 {
+		compatible = "mmc-slot";
+		non-removable;
+		max-frequency = <26000000>;
+		voltage-ranges = <3300 3300>;
+		bus-width = <8>;
+		reg = <0x00>;
+	};
+};
+
+&smi0 {
+	status = "okay";
+
+	phy0: ethernet-phy@0 {
+		compatible = "atheros,ar8033", "ethernet-phy-ieee802.3-c22";
+		reg = <0>;
+		cavium,qlm-trim = "6,sgmii";
+	};
+	phy1: ethernet-phy@1 {
+		compatible = "atheros,ar8033", "ethernet-phy-ieee802.3-c22";
+		reg = <1>;
+		cavium,qlm-trim = "6,sgmii";
+	};
+	phy2: ethernet-phy@2 {
+		compatible = "atheros,ar8033", "ethernet-phy-ieee802.3-c22";
+		reg = <2>;
+		cavium,qlm-trim = "6,sgmii";
+	};
+	phy3: ethernet-phy@3 {
+		compatible = "atheros,ar8033", "ethernet-phy-ieee802.3-c22";
+		reg = <3>;
+		cavium,qlm-trim = "6,sgmii";
+	};
+	phy4: ethernet-phy@4 {
+		compatible = "vitesse,vsc8504", "ethernet-phy-ieee802.3-c22";
+		interrupts = <17 8>;
+		interrupt-parent = <&gpio>;
+		reg = <4>;
+		optical-media-type = "1000bx";
+	};
+	phy5: ethernet-phy@5 {
+		compatible = "vitesse,vsc8504", "ethernet-phy-ieee802.3-c22";
+		interrupts = <17 8>;
+		interrupt-parent = <&gpio>;
+		reg = <5>;
+		optical-media-type = "1000bx";
+	};
+	phy6: ethernet-phy@6 {
+		compatible = "vitesse,vsc8504", "ethernet-phy-ieee802.3-c22";
+		interrupts = <17 8>;
+		interrupt-parent = <&gpio>;
+		reg = <6>;
+	};
+	phy7: ethernet-phy@7 {
+		compatible = "vitesse,vsc8504", "ethernet-phy-ieee802.3-c22";
+		reg = <7>;
+		interrupts = <17 8>;
+		interrupt-parent = <&gpio>;
+	};
+	phy8: ethernet-phy@8 {
+		compatible = "vitesse,vsc8514", "ethernet-phy-ieee802.3-c22";
+		reg = <8>;
+		interrupts = <17 8>;
+		interrupt-parent = <&gpio>;
+	};
+	phy9: ethernet-phy@9 {
+		compatible = "vitesse,vsc8514", "ethernet-phy-ieee802.3-c22";
+		reg = <9>;
+		interrupts = <17 8>;
+		interrupt-parent = <&gpio>;
+	};
+	phy10: ethernet-phy@a {
+		compatible = "vitesse,vsc8514", "ethernet-phy-ieee802.3-c22";
+		reg = <10>;
+		interrupts = <17 8>;
+		interrupt-parent = <&gpio>;
+	};
+	phy11: ethernet-phy@b {
+		compatible = "vitesse,vsc8514", "ethernet-phy-ieee802.3-c22";
+		reg = <11>;
+		interrupts = <17 8>;
+		interrupt-parent = <&gpio>;
+	};
+};
+
+&pip {
+	status = "okay";
+
+	interface@0 {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		compatible = "cavium,octeon-3860-pip-interface";
+		reg = <0>;
+
+		ethernet@0 {
+			compatible = "cavium,octeon-3860-pip-port";
+			reg = <0>;
+			phy-mode = "sgmii";
+			phy-handle = <&phy4>;
+			mtd-mac-address = <&eeprom 6>;
+		};
+		ethernet@1 {
+			compatible = "cavium,octeon-3860-pip-port";
+			reg = <1>;
+			phy-mode = "sgmii";
+			phy-handle = <&phy5>;
+			mtd-mac-address = <&eeprom 6>;
+			mtd-mac-address-increment = <(1)>;
+		};
+		ethernet@2 {
+			compatible = "cavium,octeon-3860-pip-port";
+			reg = <2>;
+			phy-mode = "sgmii";
+			phy-handle = <&phy6>;
+			mtd-mac-address = <&eeprom 6>;
+			mtd-mac-address-increment = <(2)>;
+		};
+		ethernet@3 {
+			compatible = "cavium,octeon-3860-pip-port";
+			reg = <3>;
+			phy-mode = "sgmii";
+			phy-handle = <&phy7>;
+			mtd-mac-address = <&eeprom 6>;
+			mtd-mac-address-increment = <(3)>;
+		};
+	};
+
+	interface@1 {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		compatible = "cavium,octeon-3860-pip-interface";
+		reg = <1>;
+
+		ethernet@0 {
+			compatible = "cavium,octeon-3860-pip-port";
+			reg = <0>;
+			cavium,force_link_up,1000;
+			local-mac-address = [18 e8 29 4e 20 70];
+		};
+
+		ethernet@1 {
+			compatible = "cavium,octeon-3860-pip-port";
+			reg = <1>;
+			cavium,force_link_up,1000;
+			local-mac-address = [18 e8 29 4e 20 71];
+		};
+
+		ethernet@2 {
+			compatible = "cavium,octeon-3860-pip-port";
+			reg = <2>;
+			cavium,force_link_up,1000;
+			local-mac-address = [18 e8 29 4e 20 72];
+		};
+
+		ethernet@3 {
+			compatible = "cavium,octeon-3860-pip-port";
+			reg = <3>;
+			cavium,force_link_up,1000;
+			local-mac-address = [18 e8 29 4e 20 73];
+		};
+	};
+};

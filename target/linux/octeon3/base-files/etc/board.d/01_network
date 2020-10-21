@@ -1,0 +1,23 @@
+#!/bin/sh
+
+. /lib/functions/uci-defaults.sh
+
+board_config_update
+
+board=$(board_name)
+
+case "$board" in
+	ubnt,edgerouter-4)
+		ucidef_set_interface_lan "eth0 eth1 eth2 eth3"
+        ;;
+	ubnt,edgerouter-12)
+		ucidef_set_interface_lan "eth0 eth1 eth2 eth3"
+	;;
+	*)
+		ucidef_set_interfaces_lan_wan "eth1" "eth0"
+	;;
+esac
+
+board_config_flush
+
+exit 0
