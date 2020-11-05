@@ -233,6 +233,10 @@
 			reg = <0>;
 			cavium,force_link_up,1000;
 			local-mac-address = [18 e8 29 4e 20 70];
+			fixed-link {
+				speed = <1000>;
+				full-duplex;
+			};
 		};
 
 		ethernet@1 {
@@ -240,6 +244,10 @@
 			reg = <1>;
 			cavium,force_link_up,1000;
 			local-mac-address = [18 e8 29 4e 20 71];
+			fixed-link {
+				speed = <1000>;
+				full-duplex;
+			};
 		};
 
 		ethernet@2 {
@@ -247,6 +255,10 @@
 			reg = <2>;
 			cavium,force_link_up,1000;
 			local-mac-address = [18 e8 29 4e 20 72];
+			fixed-link {
+				speed = <1000>;
+				full-duplex;
+			};
 		};
 
 		ethernet@3 {
@@ -254,6 +266,10 @@
 			reg = <3>;
 			cavium,force_link_up,1000;
 			local-mac-address = [18 e8 29 4e 20 73];
+			fixed-link {
+				speed = <1000>;
+				full-duplex;
+			};
 		};
 	};
 };
