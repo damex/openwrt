@@ -1,0 +1,340 @@
+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+
+#include "cn71xx.dtsi"
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/input/input.h>
+
+/ {
+	compatible = "ubnt,edgerouter-12", "cavium,cn7130";
+	model = "Ubiquiti EdgeRouter 12";
+
+	aliases {
+		/* White + Blinking Blue */
+		led-boot = &led_power_white;
+		/* Blue + Blinking White */
+		led-failsafe = &led_power_blue;
+		/* Constant Blue */
+		led-running = &led_power_blue;
+		/* Blue + Blinking White */
+		led-upgrade = &led_power_blue;
+	};
+
+	memory@0 {
+		device_type = "memory";
+		reg = <0x0 0x00000000>,
+		      <0x0 0x10000000>,
+		      <0x0 0x20000000>,
+		      <0x0 0x30000000>;
+	};
+
+	leds {
+		compatible = "gpio-leds";
+
+		led_power_blue: power_blue {
+			label = "blue:power";
+			gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
+		};
+
+		led_power_white: power_white {
+			label = "white:power";
+			gpios = <&gpio 17 GPIO_ACTIVE_LOW>;
+		};
+	};
+
+	keys {
+		compatible = "gpio-keys-polled";
+		poll-interval = <20>;
+
+		reset {
+			label = "reset";
+			linux,code = <KEY_RESTART>;
+			gpios = <&gpio 11 GPIO_ACTIVE_LOW>;
+			debounce-interval = <60>;
+		};
+	};
+
+	sfp: sfp {
+		compatible = "sff,sfp";
+		i2c-bus = <&twsi0>;
+		/* Pins 12, 13 and 14 gets pulled low when SFP is plugged in */
+		mod-def0-gpio = <&gpio 12 GPIO_ACTIVE_LOW>;
+	};
+};
+
+&uart0 {
+	status = "okay";
+};
+
+&usb0 {
+	status = "okay";
+};
+
+&xhci0 {
+	status = "okay";
+	dr_mode = "host";
+};
+
+&twsi0 {
+	status = "okay";
+
+	sfp_eeprom@50 {
+		compatible = "at,24c04";
+		reg = <0x50>;
+	};
+
+	sfp_eeprom@51 {
+		compatible = "at,24c04";
+		reg = <0x51>;
+	};
+};
+
+&twsi1 {
+	status = "okay";
+
+	sensor1@2e {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		compatible = "adt7475,adt7475";
+		reg = <0x2e>;
+	};
+
+	sensor2@4c {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		compatible = "tmp421,tmp421";
+		reg = <0x4c>;
+	};
+
+	psu@40 {
+		/* No Driver */
+		compatible = "isl28022,isl28022";
+		reg = <0x40>;
+	};
+};
+
+&spi {
+	status = "okay";
+
+	flash@0 {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		compatible = "Macronix,mx25l6405d", "spi-flash";
+		reg = <0>;
+		spi-max-frequency = <25000000>;
+
+		partition@0 {
+			label = "boot0";
+			read-only;
+			reg = <0x000000 0x300000>;
+		};
+
+		partition@300000 {
+			label = "dummy";
+			read-only;
+			reg = <0x300000 0x100000>;
+		};
+
+		eeprom: partition@400000 {
+			label = "eeprom";
+			read-only;
+			reg = <0x400000 0x10000>;
+		};
+	};
+};
+
+&mmc {
+	status = "okay";
+
+	mmc-slot@0 {
+		compatible = "mmc-slot";
+		reg = <0>;
+		non-removable;
+		max-frequency = <26000000>;
+		voltage-ranges = <3300 3300>;
+		bus-width = <8>;
+	};
+};
+
+&smi0 {
+	status = "okay";
+
+	phy0: ethernet-phy@0 {
+		device_type = "ethernet-phy";
+		compatible = "atheros,ar8033", "ethernet-phy-ieee802.3-c22";
+		reg = <0>;
+	};
+
+	phy1: ethernet-phy@1 {
+		device_type = "ethernet-phy";
+		compatible = "atheros,ar8033", "ethernet-phy-ieee802.3-c22";
+		reg = <1>;
+	};
+
+	phy2: ethernet-phy@2 {
+		device_type = "ethernet-phy";
+		compatible = "atheros,ar8033", "ethernet-phy-ieee802.3-c22";
+		reg = <2>;
+	};
+
+	phy3: ethernet-phy@3 {
+		device_type = "ethernet-phy";
+		compatible = "atheros,ar8033", "ethernet-phy-ieee802.3-c22";
+		reg = <3>;
+	};
+
+	phy4: ethernet-phy@4 {
+		device_type = "ethernet-phy";
+		interrupts = <17 8>;
+		interrupt-parent = <&gpio>;
+		compatible = "vitesse,vsc8504", "ethernet-phy-ieee802.3-c22";
+		reg = <4>;
+	};
+
+	phy5: ethernet-phy@5 {
+		device_type = "ethernet-phy";
+		interrupts = <17 8>;
+		interrupt-parent = <&gpio>;
+		compatible = "vitesse,vsc8504", "ethernet-phy-ieee802.3-c22";
+		reg = <5>;
+	};
+
+	phy6: ethernet-phy@6 {
+		device_type = "ethernet-phy";
+		interrupts = <17 8>;
+		interrupt-parent = <&gpio>;
+		compatible = "vitesse,vsc8504", "ethernet-phy-ieee802.3-c22";
+		reg = <6>;
+	};
+
+	phy7: ethernet-phy@7 {
+		device_type = "ethernet-phy";
+		interrupts = <17 8>;
+		interrupt-parent = <&gpio>;
+		compatible = "vitesse,vsc8504", "ethernet-phy-ieee802.3-c22";
+		reg = <7>;
+	};
+
+	phy8: ethernet-phy@8 {
+		device_type = "ethernet-phy";
+		interrupts = <17 8>;
+		interrupt-parent = <&gpio>;
+		compatible = "vitesse,vsc8514", "ethernet-phy-ieee802.3-c22";
+		reg = <8>;
+	};
+
+	phy9: ethernet-phy@9 {
+		device_type = "ethernet-phy";
+		interrupts = <17 8>;
+		interrupt-parent = <&gpio>;
+		compatible = "vitesse,vsc8514", "ethernet-phy-ieee802.3-c22";
+		reg = <9>;
+	};
+
+	phy10: ethernet-phy@a {
+		device_type = "ethernet-phy";
+		interrupts = <17 8>;
+		interrupt-parent = <&gpio>;
+		compatible = "vitesse,vsc8514", "ethernet-phy-ieee802.3-c22";
+		reg = <10>;
+	};
+
+	phy11: ethernet-phy@b {
+		device_type = "ethernet-phy";
+		interrupts = <17 8>;
+		interrupt-parent = <&gpio>;
+		compatible = "vitesse,vsc8514", "ethernet-phy-ieee802.3-c22";
+		reg = <11>;
+	};
+};
+
+&pip {
+	status = "okay";
+
+	interface@0 {
+		status = "okay";
+
+		ethernet@0 {
+			label = "lan11";
+			status = "okay";
+			phy-mode = "sgmii";
+			phy-handle = <&phy4>;
+			mtd-mac-address = <&eeprom 0>;
+		};
+
+		ethernet@1 {
+			label = "lan10";
+			status = "okay";
+			phy-mode = "sgmii";
+			phy-handle = <&phy5>;
+			mtd-mac-address = <&eeprom 0>;
+			mtd-mac-address-increment = <(1)>;
+		};
+
+		ethernet@2 {
+			label = "lan8";
+			status = "okay";
+			phy-mode = "sgmii";
+			phy-handle = <&phy6>;
+			mtd-mac-address = <&eeprom 0>;
+			mtd-mac-address-increment = <(2)>;
+		};
+
+		ethernet@3 {
+			label = "lan9";
+			status = "okay";
+			phy-mode = "sgmii";
+			phy-handle = <&phy7>;
+			mtd-mac-address = <&eeprom 0>;
+			mtd-mac-address-increment = <(3)>;
+		};
+	};
+
+	interface@1 {
+		status = "okay";
+
+		ethernet@0 {
+			label = "itf0";
+			status = "okay";
+			mtd-mac-address = <&eeprom 0>;
+			mtd-mac-address-increment = <(4)>;
+			fixed-link {
+				speed = <1000>;
+				full-duplex;
+			};
+		};
+
+		ethernet@1 {
+			label = "itf1";
+			status = "okay";
+			mtd-mac-address = <&eeprom 0>;
+			mtd-mac-address-increment = <(5)>;
+			fixed-link {
+				speed = <1000>;
+				full-duplex;
+			};
+		};
+
+		ethernet@2 {
+			label = "itf2";
+			status = "okay";
+			mtd-mac-address = <&eeprom 0>;
+			mtd-mac-address-increment = <(6)>;
+			fixed-link {
+				speed = <1000>;
+				full-duplex;
+			};
+		};
+
+		ethernet@3 {
+			label = "itf3";
+			status = "okay";
+			mtd-mac-address = <&eeprom 0>;
+			mtd-mac-address-increment = <(7)>;
+			fixed-link {
+				speed = <1000>;
+				full-duplex;
+			};
+		};
+	};
+};
