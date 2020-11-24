@@ -54,11 +54,22 @@
 		};
 	};
 
-	sfp: sfp {
+	sfp: sfp1 {
 		compatible = "sff,sfp";
 		i2c-bus = <&twsi0>;
-		/* Pins 12, 13 and 14 gets pulled low when SFP is plugged in */
+		/* Pins 3, 5 gets pulled low when SFP without cable is plugged in */
+		/* Pins 4 gets pulled low when SFP cable is plugged in to SFP module */
+		mod-def0-gpio = <&gpio 3 GPIO_ACTIVE_LOW>;
+		tx-disable-gpios = <&gpio 4 GPIO_ACTIVE_HIGH>;
+	};
+
+	sfp: sfp2 {
+		compatible = "sff,sfp";
+		i2c-bus = <&twsi0>;
+		/* Pins 12, 14 gets pulled low when SFP without cable is plugged in */
+		/* Pins 13 gets pulled low when SFP cable is plugged in to SFP module */
 		mod-def0-gpio = <&gpio 12 GPIO_ACTIVE_LOW>;
+		tx-disable-gpios = <&gpio 13 GPIO_ACTIVE_HIGH>;
 	};
 };
 
