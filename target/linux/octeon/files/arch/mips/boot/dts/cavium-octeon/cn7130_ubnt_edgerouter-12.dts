@@ -54,7 +54,7 @@
 		};
 	};
 
-	sfp: sfp1 {
+	sfp1: sfp1 {
 		compatible = "sff,sfp";
 		i2c-bus = <&twsi0>;
 		/* Pins 3, 5 gets pulled low when SFP without cable is plugged in */
@@ -63,7 +63,7 @@
 		tx-disable-gpios = <&gpio 4 GPIO_ACTIVE_HIGH>;
 	};
 
-	sfp: sfp2 {
+	sfp2: sfp2 {
 		compatible = "sff,sfp";
 		i2c-bus = <&twsi0>;
 		/* Pins 12, 14 gets pulled low when SFP without cable is plugged in */
