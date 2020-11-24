@@ -200,6 +200,7 @@
 		interrupt-parent = <&gpio>;
 		compatible = "vitesse,vsc8504", "ethernet-phy-ieee802.3-c22";
 		reg = <4>;
+		sfp = <&sfp2>;
 	};
 
 	phy5: ethernet-phy@5 {
@@ -208,6 +209,7 @@
 		interrupt-parent = <&gpio>;
 		compatible = "vitesse,vsc8504", "ethernet-phy-ieee802.3-c22";
 		reg = <5>;
+		sfp = <&sfp1>;
 	};
 
 	phy6: ethernet-phy@6 {
