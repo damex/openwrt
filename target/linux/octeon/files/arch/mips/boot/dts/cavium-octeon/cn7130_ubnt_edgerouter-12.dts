@@ -110,13 +110,6 @@
 		reg = <0x2e>;
 	};
 
-	sensor2@4c {
-		#address-cells = <1>;
-		#size-cells = <0>;
-		compatible = "tmp421,tmp421";
-		reg = <0x4c>;
-	};
-
 	psu@40 {
 		/* No Driver */
 		compatible = "isl28022,isl28022";
