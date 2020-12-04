@@ -244,7 +244,7 @@
 		reg = <9>;
 	};
 
-	phy10: ethernet-phy@a {
+	phy10: ethernet-phy@10 {
 		device_type = "ethernet-phy";
 		interrupts = <17 8>;
 		interrupt-parent = <&gpio>;
@@ -252,7 +252,7 @@
 		reg = <10>;
 	};
 
-	phy11: ethernet-phy@b {
+	phy11: ethernet-phy@11 {
 		device_type = "ethernet-phy";
 		interrupts = <17 8>;
 		interrupt-parent = <&gpio>;
