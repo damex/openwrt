@@ -28,18 +28,6 @@
 		      <0x0 0x30000000>;
 	};
 
-	gpio-export {
-		compatible = "gpio-export";
-		#size-cells = <0>;
-
-		poe-passthrough {
-			gpio-export,name = "poe-passthrough";
-			gpio-export,output = <0>;
-			gpios = <&gpio 2 GPIO_ACTIVE_LOW
-				 &gpio 9 GPIO_ACTIVE_LOW>;
-		};
-	};
-
 	leds {
 		compatible = "gpio-leds";
 
